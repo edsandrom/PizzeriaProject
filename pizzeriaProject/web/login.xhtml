@@ -1,0 +1,30 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <h:head>
+        <title>Employees Login Page</title>
+        <style>#mainDiv{border:3px; width:350px; border-style:solid; border-color: blue; padding: 1em; margin:auto}
+            table, th, td {margin: auto; border: 1px solid black; border-collapse: collapse;}
+            th, td {padding: 5px;}
+            th {text-align: left;}
+            td {text-align: center;}
+            label {padding: 1%; display: inline-block; width: 140px; text-align: left;}​
+        </style>
+    </h:head>
+    <h:body>
+        <div id="mainDiv">
+            <h:form>
+                <h:outputLabel>Username:</h:outputLabel><h:inputText value="#{employee.username}"/>
+                <br />
+                <h:outputLabel>Password:</h:outputLabel><h:inputSecret value="#{employee.password}"/>
+                <br /><br />
+                <h:commandButton value="Login" action="#{employee.loginUser}"></h:commandButton>
+                <br /><br />
+                <h:commandButton value="Back" action="#{employee.logout}"></h:commandButton>
+            </h:form>
+        </div>
+    </h:body>
+</html>
+

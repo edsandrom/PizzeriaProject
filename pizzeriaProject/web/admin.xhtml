@@ -1,0 +1,119 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">      
+    <h:head>     
+        <title>Admin Page</title>
+        <style>#logout{border:3px; width:55px; border-style:solid; border-color: red; padding: 1em; float:right}
+            #mainDiv {margin:auto; width: 90%;height: 100%; margin-left: 5%; margin-top: 3%; }
+            #topDiv{border:3px; width:20%; border-style:solid; border-color: blue; padding: 1em; float: left;}
+            #ordDiv{border:3px; width:66%; border-style:solid; border-color: green; margin-left:1%; padding: 0.5%; margin-right: 5%; float: right;}
+            label {padding: 1%; display: inline-block; width: 140px; text-align: left;}​
+            input[type="check"] {margin:auto ;vertical-align: middle;}
+            #buttonDiv{display: flex; justify-content: center;}
+            table, th, td {margin: auto; border-style: none;}
+            th, td {padding: 5px;}
+            th {text-align: center; width: 25%; border-style: none;}
+            td {text-align: center;}
+            .table-header{
+                text-align:center;
+                background:none repeat scroll 0 0 #E5E5E5;
+                border-bottom:1px solid #BBBBBB;
+                padding:8px;
+                width:100%;
+            }
+            .table-row{
+                text-align:center;
+                background:none repeat scroll 0 0 #FFFFFFF;
+                border-top:1px solid #BBBBBB;
+            }
+
+        </style>
+    </h:head>
+    <h:body>
+        <div id="logout">
+            <h:form>
+                <h:commandLink action="#{employee.logout}" value="Logout"></h:commandLink>
+            </h:form>
+        </div>
+        <h1 style='margin-left: 15%;'>Welcome #{employee.username}</h1>
+        <div id='mainDiv'>
+            <div id="topDiv">
+                <h1 style="text-align: center;">Manage Toppings</h1>
+                <h:form style="align-content: center;" id='insertToppingForm'>
+                    <h:outputLabel>Topping Name:</h:outputLabel><h:inputText id="topNameInput" value="#{toppings.name}"/>
+                    &nbsp;&nbsp;
+                    <br />
+                    <h:outputLabel>Topping Price:</h:outputLabel><h:inputText 
+                        id="topPriceInput" value="#{toppings.price}" converterMessage="Please enter a decimal value in price field"/>
+                    &nbsp;&nbsp;
+                    <br />
+                    <h:selectBooleanCheckbox id="topActiveCheckBox" value="#{toppings.isActive}">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Available?&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</h:selectBooleanCheckbox>
+                    <br /> <br />
+
+                    <div id='buttonDiv'>
+                        <h:commandButton value="Add Topping" action="#{toppings.addTopping}">
+                            <f:param name="uName" value="#{employee.username}" />
+                        </h:commandButton>
+                    </div>
+                </h:form>
+                <br /><br />
+                <h:panelGrid  columns="3">
+                    <h:outputText class="table-header" value="Topping Name" />
+                    <h:outputText class="table-header" value="Price $" />
+                    <h:outputText class="table-header" value="Available" />
+                    <c:forEach id="loop" var="i" items="#{toppings.getAllToppings()}">
+                        <h:outputText class="table-row" value="#{i.name}" />
+                        <h:outputText class="table-row" value="#{i.price}" />
+                        <h:outputText class="table-row" value="#{i.isActive}" />
+                    </c:forEach>
+                </h:panelGrid>
+                <br /> <br />
+                <form style="align-content: center;" id='updateToppingsForm' action ='UpdateToppings'>
+                    <div id='buttonDiv'>
+                        <input type='submit' value="Update Toppings" />
+                    </div>
+                </form>
+            </div>
+            <br /><br />
+            <div id="ordDiv">
+                <h1 style="text-align:center;">Manage Orders</h1>
+                <h:panelGrid  columns="7">
+                    <h:outputText class="table-header" value="Order #" />
+                    <h:outputText class="table-header" value="Total $" />
+                    <h:outputText class="table-header" value="Date In" />
+                    <h:outputText class="table-header" value="Date Out" />
+                    <h:outputText class="table-header" value="Order Status" />
+                    <h:outputText class="table-header" value="Finish Order" />
+                    <h:outputText class="table-header" value="View Details" />
+                    <c:forEach id="loop2" var="order" items="#{orderBL.getAllOrders()}">
+                        <h:outputText class="table-row" value="#{order.id}" />
+                        <h:outputText class="table-row" value="#{order.totalPrice}" />
+                        <h:outputText class="table-row" value="#{order.placedDateTime}" />
+                        <h:outputText class="table-row" value="#{order.deliveryDateTime}" />
+                        <h:outputText class="table-row" value="#{order.orderStatus}" />
+                        <h:form id="DoneForm" rendered="#{orderBL.checkOrderStatus(order.orderStatus)}">
+                            <h:commandButton value="Done" action="#{orderBL.finishOrder()}" >
+                                <f:param name="orderId" id="orderId" value="#{order.id}" />
+                            </h:commandButton>
+                        </h:form>
+                        <h:form id="DoneForm" rendered="#{not orderBL.checkOrderStatus(order.orderStatus)}">
+                            <h:commandButton disabled="true" value="Done" action="#{orderBL.finishOrder()}" >
+                                <f:param name="orderId" id="orderId" value="#{order.id}" />
+                            </h:commandButton>
+                        </h:form>
+                        <form action="RetrieveCustomer" method="post" >
+                            <input type="submit" name="orderIDforCus" id="orderIDforCus" value="#{order.id}"  />
+                        </form>
+                    </c:forEach>
+                </h:panelGrid>
+            </div>
+        </div>
+
+
+    </h:body>
+</html>
